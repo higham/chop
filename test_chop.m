@@ -305,6 +305,23 @@ options.round = 4;
 y = chop(x,options);  % Should not change x.
 assert_eq(x,y);
 
+% Test on single inputs.
+clear options
+ps = single(pi);
+pd = double(ps);
+options.format = 'b';
+ys = chop(ps);
+assert_eq(isa(ys,'single'),true)
+yd = chop(pd);
+assert_eq(double(ys),yd)
+
+options.format = 'h'; options.round = 2;
+as = single(rand(n,1)); ad = double(as);
+delta = single(rand(n,1));
+cd = chop(ad + 1e-5*double(delta),options);
+cs = chop(as + 1e-5*delta,options);
+assert_eq(cd,double(cs));
+
 fprintf('All tests successful!\n')
 
 %%%%%%%%%%%%%%%%%%%%%%%

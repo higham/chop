@@ -4,10 +4,12 @@
 About
 -----
 
-`chop` is a MATLAB function for rounding the elements of a matrix to a lower
-precision arithmetic with one of several forms of rounding.  Its intended
-use is for simulating arithmetic of different precisions (less than double)
-with various rounding modes.
+`chop` is a MATLAB function for rounding the elements of a matrix to a
+lower precision arithmetic with one of several forms of rounding.  Its
+intended use is for simulating arithmetic of different precisions (less
+than double) with various rounding modes. The input to `chop` should be
+single precision or double precision and the output will have the same
+type: the lower precision numbers are stored within a higher precision type.
 
 The arithmetic formats supported are 
 -  'b', 'bfloat16'           - bfloat16,
@@ -33,7 +35,7 @@ Several rounding modes are supported:
 
 A further option causes each element of the rounded result 
 to have, with a specified probability defaulting to 0.5,
-a randomly chosen bit its significand flipped. 
+a randomly chosen bit in its significand flipped. 
 
 Demonstration function:
 - `demo-harmonic` computes the harmonic sum in several arithmetic

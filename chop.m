@@ -2,7 +2,9 @@ function [c,options] = chop(x,options)
 %CHOP    Round matrix elements to lower precision.
 %   CHOP(X,options) is the matrix obtained by rounding the elements of
 %   the array X to a lower precision arithmetic with one of several
-%   forms of rounding.  The arithmetic format is specified by
+%   forms of rounding.  X should be single precision or double precision
+%   and the output will have the same type.
+%   The arithmetic format is specified by
 %   options.format, which is one of 
 %     'b', 'bfloat16'           - bfloat16,
 %     'h', 'half', 'fp16'       - IEEE half precision (the default),
