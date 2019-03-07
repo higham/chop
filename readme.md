@@ -4,7 +4,7 @@
 About
 -----
 
-`chop' is a MATLAB function for rounding the elements of a matrix to a lower
+`chop` is a MATLAB function for rounding the elements of a matrix to a lower
 precision arithmetic with one of several forms of rounding.  Its intended
 use is for simulating arithmetic of different precisions (less than double)
 with various rounding modes.
@@ -37,12 +37,12 @@ Demonstration function:
 
 Other M-file:
 
-- `roundit' is a function for rounding a matrix to have integer entries.
-  It is used by `chop'. It is not intended to be called irctly.
+- `roundit` is a function for rounding a matrix to have integer entries.
+  It is used by `chop`. It is not intended to be called dirctly.
 
 Test funtions:
-- `test_chop' is a test function for `chop'.
-- `test_roundit' is a test function for `roundit'.
+- `test_chop` is a test function for `chop`.
+- `test_roundit` is a test function for `roundit`.
 Each function should print "All tests successful!".
 
 The code was developed in MATLAB R2018b and works with versions at least
