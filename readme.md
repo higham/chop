@@ -33,7 +33,7 @@ Several rounding modes are supported:
 
 Demonstration function:
 - `demo-harmonic' computes the harmonic sum in several arithmetic
-   formats using all the supprte rounding modes.
+   formats using all the supported rounding modes.
 
 Other M-file:
 
@@ -47,6 +47,12 @@ Each function should print "All tests successful!".
 
 The code was developed in MATLAB R2018b and works with versions at least
 back to R2016a.
+
+Reference
+---------
+
+Nicholas J. Higham and Srikara Pranesh, [Simulating Low Precision
+Floating-Point Arithmetic],()", MIMS Eprint, March 2019; to appear.
 
 License
 -------
