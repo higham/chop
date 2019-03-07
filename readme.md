@@ -31,6 +31,10 @@ Several rounding modes are supported:
 - Stochastic rounding - round to the next larger or next smaller 
   floating-point number with equal probability.
 
+A further option causes each element of the rounded result 
+to have, with a specified probability defaulting to 0.5,
+a randomly chosen bit its significand flipped. 
+
 Demonstration function:
 - `demo-harmonic` computes the harmonic sum in several arithmetic
    formats using all the supported rounding modes.
