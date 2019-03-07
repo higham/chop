@@ -16,20 +16,20 @@ The arithmetic formats supported are
 -  'd', 'double', 'fp64'     - IEEE double precision,
 -  'c', 'custom',            - custom format.
 
-Subnormal numbers can be supposrted or not.,
+Subnormal numbers can be supported or not,
 and in the latter case they are flushed to zero.
 
 Several rounding modes are supported:
--     Round to nearest using round to even last bit to break ties
--     (the default).
--     Round towards plus infinity (round up).
--     Round towards minus infinity (round down).
--     Round towards zero.
--     Stochastic rounding - round to the next larger or next smaller
-      floating-point number with probability proportional to
-      the distance to those floating-point numbers.
--     Stochastic rounding - round to the next larger or next smaller 
-      floating-point number with equal probability.
+- Round to nearest using round to even last bit to break ties
+  (the default).
+- Round towards plus infinity (round up).
+- Round towards minus infinity (round down).
+- Round towards zero.
+- Stochastic rounding - round to the next larger or next smaller
+  floating-point number with probability proportional to
+  the distance to those floating-point numbers.
+- Stochastic rounding - round to the next larger or next smaller 
+  floating-point number with equal probability.
 
 Demonstration function:
 - `demo-harmonic' computes the harmonic sum in several arithmetic
