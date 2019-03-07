@@ -38,12 +38,15 @@ Demonstration function:
 Other M-file:
 
 - `roundit` is a function for rounding a matrix to have integer entries.
-  It is used by `chop`. It is not intended to be called dirctly.
+  It is used by `chop` and is not intended to be called directly.
 
-Test funtions:
+Test functions:
 - `test_chop` is a test function for `chop`.
 - `test_roundit` is a test function for `roundit`.
 Each function should print "All tests successful!".
+
+Requirements
+---------
 
 The code was developed in MATLAB R2018b and works with versions at least
 back to R2016a.
