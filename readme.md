@@ -1,4 +1,4 @@
-`Chop` - Round Matrix Elements to Lower Precision
+`Chop` - MATLAB code for rounding matrix elements to lower precision
 ==========
 
 About
@@ -32,7 +32,7 @@ Several rounding modes are supported:
   floating-point number with equal probability.
 
 Demonstration function:
-- `demo-harmonic' computes the harmonic sum in several arithmetic
+- `demo-harmonic` computes the harmonic sum in several arithmetic
    formats using all the supported rounding modes.
 
 Other M-file:
