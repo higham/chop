@@ -16,7 +16,7 @@ The arithmetic formats supported are
 -  'h', 'half', 'fp16'       - IEEE half precision (the default),
 -  's', 'single', 'fp32'     - IEEE single precision,
 -  'd', 'double', 'fp64'     - IEEE double precision,
--  'c', 'custom',            - custom format.
+-  'c', 'custom'            - custom format.
 
 Subnormal numbers can be supported or not,
 and in the latter case they are flushed to zero.
@@ -38,7 +38,7 @@ to have, with a specified probability defaulting to 0.5,
 a randomly chosen bit in its significand flipped. 
 
 Demonstration function:
-- `demo-harmonic` computes the harmonic sum in several arithmetic
+- `demo-harmonic` computes the harmonic seriesin several arithmetic
    formats using all the supported rounding modes.
 
 Other M-file:
@@ -49,7 +49,8 @@ Other M-file:
 Test functions:
 - `test_chop` is a test function for `chop`.
 - `test_roundit` is a test function for `roundit`.
-Each function should print "All tests successful!".
+
+Each test function should print "All tests successful!".
 
 Requirements
 ---------

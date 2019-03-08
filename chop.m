@@ -4,14 +4,13 @@ function [c,options] = chop(x,options)
 %   the array X to a lower precision arithmetic with one of several
 %   forms of rounding.  X should be single precision or double precision
 %   and the output will have the same type.
-%   The arithmetic format is specified by
-%   options.format, which is one of 
+%   The arithmetic format is specified by options.format, which is one of 
 %     'b', 'bfloat16'           - bfloat16,
 %     'h', 'half', 'fp16'       - IEEE half precision (the default),
 %     's', 'single', 'fp32'     - IEEE single precision,
 %     'd', 'double', 'fp64'     - IEEE double precision,
 %     'c', 'custom',            - custom format.
-%   In the last case the format is defined by 
+%   In the last case the (base 2) format is defined by 
 %   options.params, which is a 2-vector [t, emax] where t is the
 %   number of bits in the significand (including the hidden bit) and
 %   emax is the maximum value of the exponent.  The values of t and emax
@@ -29,7 +28,7 @@ function [c,options] = chop(x,options)
 %     4: round towards zero;
 %     5: stochastic rounding - round to the next larger or next smaller
 %        f.p. (floating-point) number with probability proportional to
-%        the distance to those f.p. numbers;
+%        1 minus the distance to those f.p. numbers;
 %     6: stochastic rounding - round to the next larger or next smaller 
 %        f.p. number with equal probability.
 %   For stochastic rounding, exact f.p. numbers are not changed.
@@ -38,8 +37,8 @@ function [c,options] = chop(x,options)
 %   in its significand flipped. 
 %   On the first call: if options is omitted or only partially specified 
 %   the defaults stated above are used.
-%   On subseqeuent calls: if options is omitted or empty then the values used 
-%   in the previous call are re-used.  For any missing fields the
+%   On subsequent calls: if options is omitted or empty then the values used 
+%   in the previous call are re-used; for any missing fields the
 %   default is used.
 %   The options structure is stored internally in a persistent variable
 %   and can be obtained with [~,options] = CHOP.

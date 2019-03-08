@@ -60,9 +60,21 @@ assert_eq(options.p,0.5)
 fp.format = 'd'; [c,options] = chop(pi,fp);
 assert_eq(options.format,'d')
 assert_eq(options.subnormal,1)
+assert_eq(options.params, [53 1023])
 [~,fp] = chop;
 assert_eq(fp.format,'d')
 assert_eq(fp.subnormal,1)
+assert_eq(fp.params, [53 1023])
+
+clear fp
+fp.format = 'bfloat16'; [c,options] = chop(pi,fp);
+assert_eq(options.format,'bfloat16')
+assert_eq(options.subnormal,0)
+assert_eq(options.params, [8 127])
+[~,fp] = chop;
+assert_eq(fp.format,'bfloat16')
+assert_eq(fp.subnormal,0)
+assert_eq(fp.params, [8 127])
 
 clear chop
 [~,fp] = chop;
