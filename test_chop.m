@@ -31,6 +31,12 @@ fp.flip = []; [c,options] = chop(pi,fp);
 assert_eq(options.flip,0)  % Check no default.
 
 clear chop fp options 
+fp.flip = 1; [~,options] = chop([],fp);
+assert_eq(options.format,'h') 
+assert_eq(options.round,1)  
+assert_eq(options.subnormal,1)  
+
+clear chop fp options 
 % check all default options
 fp.format = []; fp.subnormal = [];
 fp.round = []; fp.flip = [];
@@ -333,6 +339,29 @@ delta = single(rand(n,1));
 cd = chop(ad + 1e-5*double(delta),options);
 cs = chop(as + 1e-5*delta,options);
 assert_eq(cd,double(cs));
+
+options.format = 'c';
+options.params = [11 5];
+temp1 = chop(single(pi),options);
+options.format = 'h';
+temp2 = chop(single(pi),options);
+assert_eq(temp1,temp2)
+
+temp = 0;
+try
+    options.format = 'c';
+    options.params = [12 5];
+    temp = chop(single(pi),options); % Error!
+catch
+end
+assert_eq(temp,0)
+try
+    options.format = 'c';
+    options.params = [26 9];
+    temp = chop(pi,options); % Error!
+catch
+end
+assert_eq(temp,0)
 
 fprintf('All tests successful!\n')
 

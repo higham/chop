@@ -9,7 +9,7 @@ function [c,options] = chop(x,options)
 %     'h', 'half', 'fp16'       - IEEE half precision (the default),
 %     's', 'single', 'fp32'     - IEEE single precision,
 %     'd', 'double', 'fp64'     - IEEE double precision,
-%     'c', 'custom',            - custom format.
+%     'c', 'custom'             - custom format.
 %   In the last case the (base 2) format is defined by 
 %   options.params, which is a 2-vector [t, emax] where t is the
 %   number of bits in the significand (including the hidden bit) and
@@ -58,7 +58,8 @@ if isempty(fpopts) && (nargin <= 1 || (nargin == 2 && isempty(options)))
       fpopts.round = 1; fpopts.flip = 0; fpopts.p = 0.5;
 elseif nargin == 2 && ~isempty(options)
     % This is not the first call, but fpopts might have all empty fields.
-    if isfield(options,'format') && isempty(options.format)
+    if ~isfield(options,'format') || ...
+        isfield(options,'format') && isempty(options.format)
        options.format = 'h';
     end
     fpopts.format = options.format;
@@ -109,6 +110,14 @@ elseif ismember(fpopts.format, {'c','custom'})
       if isfield(options,'params') && ~isempty(options.params)
          fpopts.params(1) = options.params(1);
          fpopts.params(2) = options.params(2);
+         % Need "p_2 \ge 2p_1 + 2" to avoid double rounding probolems.
+         if isa(x,'single') && (fpopts.params(1) > 11)
+            error(['Precision of the custom format must be less than ' ...
+                   '12 if working in single.']);
+         elseif isa(x,'double') && (fpopts.params(1) > 25)
+            error(['Precision of the custom format must be less than ' ...
+                   '26 if working in double.']);
+         end
       end    
    elseif ~isfield(fpopts,'params') || isempty(fpopts.params)
       error('Must specify options.params with options.format = ''c''.')
