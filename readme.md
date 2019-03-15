@@ -52,10 +52,10 @@ Test functions:
 
 Each test function should print "All tests successful!".
 
-The function `chop` is a successor to a function of the same anme in the
+The function `chop` is a successor to a function of the same name in the
 [The Matrix Computation Toolbox](http://www.ma.man.ac.uk/~higham/mctoolbox/)
-(also on
-[File Exchange](https://uk.mathworks.com/matlabcentral/fileexchange/2360-the-matrix-computation-toolbox).
+(also available on
+[File Exchange](https://uk.mathworks.com/matlabcentral/fileexchange/2360-the-matrix-computation-toolbox)).
 
 Requirements
 ---------
