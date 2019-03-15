@@ -53,9 +53,9 @@ Test functions:
 Each test function should print "All tests successful!".
 
 The function `chop` is a successor to a function of the same anme in the
-[The Matrix Computation Toolbox],(http://www.ma.man.ac.uk/~higham/mctoolbox/)
+[The Matrix Computation Toolbox](http://www.ma.man.ac.uk/~higham/mctoolbox/)
 (also on
-[File Exchange],(https://uk.mathworks.com/matlabcentral/fileexchange/2360-the-matrix-computation-toolbox).
+[File Exchange](https://uk.mathworks.com/matlabcentral/fileexchange/2360-the-matrix-computation-toolbox).
 
 Requirements
 ---------
@@ -67,7 +67,7 @@ Reference
 ---------
 
 Nicholas J. Higham and Srikara Pranesh, [Simulating Low Precision
-Floating-Point Arithmetic],()", MIMS Eprint, March 2019; to appear.
+Floating-Point Arithmetic]()", MIMS Eprint, March 2019; to appear.
 
 License
 -------
