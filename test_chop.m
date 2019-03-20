@@ -365,6 +365,8 @@ assert_eq(temp,0)
 
 fprintf('All tests successful!\n')
 
+clear chop fp options options2 assert_eq
+
 %%%%%%%%%%%%%%%%%%%%%%%
 function assert_eq(a,b)
 % if isempty(n), n = 0; end  % First call.
