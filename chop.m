@@ -123,6 +123,8 @@ elseif ismember(fpopts.format, {'c','custom'})
       error('Must specify options.params with options.format = ''c''.')
    end    
    t = fpopts.params(1); emax = fpopts.params(2);
+else
+   error('Unrecognized format.')  
 end   
 
 if nargout == 2, options = fpopts; end
