@@ -33,9 +33,14 @@ Several rounding modes are supported:
 - Stochastic rounding - round to the next larger or next smaller 
   floating-point number with equal probability.
 
-A further option causes each element of the rounded result 
-to have, with a specified probability defaulting to 0.5,
-a randomly chosen bit in its significand flipped. 
+Optionally, each element of the rounded result has, with a specified
+probability defaulting to 0.5, a randomly chosen bit in its significand
+flipped.  This option is useful for simulating soft errors
+
+A further option causes the exponent limit for the specified arithmetic to
+be ignored, so overflow, underflow, or subnormal numbers will be produced
+only if necessary for the data type of the input.  This option is useful
+for exploring low precisions indepdent of range limitations.
 
 Demonstration function:
 - `demo-harmonic` computes the harmonic series in several arithmetic
