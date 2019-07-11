@@ -78,8 +78,8 @@ Reference
 ---------
 
 Nicholas J. Higham and Srikara Pranesh, [Simulating Low Precision
-Floating-Point Arithmetic](http://eprints.maths.manchester.ac.uk/2692), MIMS Eprint 2019.4, Manchester Institute for Mathematical
-Sciences, The University of Manchester, UK, March 2019.
+Floating-Point Arithmetic](http://eprints.maths.manchester.ac.uk/2723), MIMS Eprint 2019.4, Manchester Institute for Mathematical
+Sciences, The University of Manchester, UK, March 2019; revised July 2019.
 
 License
 -------
