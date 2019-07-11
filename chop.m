@@ -1,44 +1,52 @@
 function [c,options] = chop(x,options)
 %CHOP    Round matrix elements to lower precision.
 %   CHOP(X,options) is the matrix obtained by rounding the elements of
-%   the array X to a lower precision arithmetic with one of several
+%   the real array X to a lower precision arithmetic with one of several
 %   forms of rounding.  X should be single precision or double precision
-%   and the output will have the same type.
-%   The arithmetic format is specified by options.format, which is one of 
-%     'b', 'bfloat16'           - bfloat16,
-%     'h', 'half', 'fp16'       - IEEE half precision (the default),
-%     's', 'single', 'fp32'     - IEEE single precision,
-%     'd', 'double', 'fp64'     - IEEE double precision,
-%     'c', 'custom'             - custom format.
-%   In the last case the (base 2) format is defined by 
-%   options.params, which is a 2-vector [t, emax] where t is the
-%   number of bits in the significand (including the hidden bit) and
-%   emax is the maximum value of the exponent.  The values of t and emax
-%   are built-in for b, h, s, d and will automatically be returned in
-%   options.params. 
-%   options.subnormal specifies whether subnormal numbers are supported
-%   (if they are not, subnormals are flushed to zero):
-%      0 = do not support subnormals (the default for bfloat16),
-%      1 = support subnormals (the default for fp16, fp32 and fp64).
-%   The form of rounding is specified by options.round:
-%     1: round to nearest using round to even last bit to break ties
-%        (the default);
-%     2: round towards plus infinity (round up);
-%     3: round towards minus infinity (round down);
-%     4: round towards zero;
-%     5: stochastic rounding - round to the next larger or next smaller
-%        f.p. (floating-point) number with probability proportional to
-%        1 minus the distance to those f.p. numbers;
-%     6: stochastic rounding - round to the next larger or next smaller 
-%        f.p. number with equal probability.
-%   For stochastic rounding, exact f.p. numbers are not changed.
-%   If options.flip = 1 (default 0) then each element of the rounded result 
-%   has, with probability options.p (default 0.5), a randomly chosen bit
-%   in its significand flipped. 
+%   and the output will have the same type.  The structure options
+%   controls various aspects of the rounding.
+%   1. The arithmetic format is specified by options.format, which is one of 
+%       'b', 'bfloat16'           - bfloat16,
+%       'h', 'half', 'fp16'       - IEEE half precision (the default),
+%       's', 'single', 'fp32'     - IEEE single precision,
+%       'd', 'double', 'fp64'     - IEEE double precision,
+%       'c', 'custom'             - custom format.
+%      In the last case the (base 2) format is defined by 
+%      options.params, which is a 2-vector [t,emax] where t is the
+%      number of bits in the significand (including the hidden bit) and
+%      emax is the maximum value of the exponent.  The values of t and emax
+%      are built-in for b, h, s, d and will automatically be returned in
+%      options.params. 
+%   2. options.subnormal specifies whether subnormal numbers are supported
+%      (if they are not, subnormals are flushed to zero):
+%        0 = do not support subnormals (the default for bfloat16),
+%        1 = support subnormals (the default for fp16, fp32 and fp64).
+%   3. The form of rounding is specified by options.round:
+%       1: round to nearest using round to even last bit to break ties
+%          (the default);
+%       2: round towards plus infinity (round up);
+%       3: round towards minus infinity (round down);
+%       4: round towards zero;
+%       5: stochastic rounding - round to the next larger or next smaller
+%          f.p. (floating-point) number with probability proportional to
+%          1 minus the distance to those f.p. numbers;
+%       6: stochastic rounding - round to the next larger or next smaller 
+%          f.p. number with equal probability.
+%      For stochastic rounding, exact f.p. numbers are not changed.
+%   4. If options.flip = 1 (default 0) then each element of the rounded
+%      result has, with probability options.p (default 0.5), a randomly 
+%      chosen bit in its significand flipped.  This option is useful for
+%      simulating soft errors.
+%   5. If options.explim = 0 (default 1) then emax (the maximal
+%      exponent) for the specified arithmetic is ignored, so overflow,
+%      underflow, or subnormal numbers will be produced only if necessary 
+%      for the data type of X.  This option is useful for exploring
+%      low precisions indepdent of range limitations.
+
 %   On the first call: if options is omitted or only partially specified 
 %   the defaults stated above are used.
-%   On subsequent calls: if options is omitted or empty then the values used 
-%   in the previous call are re-used; for any missing fields the
+%   On subsequent calls: if options is omitted or empty then the values
+%   used in the previous call are re-used; for any missing fields the
 %   default is used.
 %   The options structure is stored internally in a persistent variable
 %   and can be obtained with [~,options] = CHOP.
@@ -51,11 +59,13 @@ function [c,options] = chop(x,options)
 % White paper. Document number 338302-001US.
 % https://software.intel.com/en-us/download/bfloat16-hardware-numerics-definition
 
+if nargin >= 1 && ~isreal(x), error('Chop requires a real input array.'), end
 persistent fpopts
 
 if isempty(fpopts) && (nargin <= 1 || (nargin == 2 && isempty(options)))
       fpopts.format = 'h'; fpopts.subnormal = 1;
       fpopts.round = 1; fpopts.flip = 0; fpopts.p = 0.5;
+      fpopts.explim = 1;
 elseif nargin == 2 && ~isempty(options)
     % This is not the first call, but fpopts might have all empty fields.
     if ~isfield(options,'format') || ...
@@ -80,12 +90,17 @@ elseif nargin == 2 && ~isempty(options)
     if isfield(options,'flip') && ~isempty(options.flip)
        fpopts.flip = options.flip;
     else
-        fpopts.flip = 0;
+       fpopts.flip = 0;
     end    
     if isfield(options,'p') && ~isempty(options.p)
        fpopts.p = options.p;
     else    
-        fpopts.p = 0.5;
+       fpopts.p = 0.5;
+    end    
+    if isfield(options,'explim') && ~isempty(options.explim)
+       fpopts.explim = options.explim;
+    else
+       fpopts.explim = 1;
     end    
 end
 
@@ -110,7 +125,7 @@ elseif ismember(fpopts.format, {'c','custom'})
       if isfield(options,'params') && ~isempty(options.params)
          fpopts.params(1) = options.params(1);
          fpopts.params(2) = options.params(2);
-         % Need "p_2 \ge 2p_1 + 2" to avoid double rounding probolems.
+         % Need "p_2 \ge 2p_1 + 2" to avoid double rounding problems.
          if isa(x,'single') && (fpopts.params(1) > 11)
             error(['Precision of the custom format must be less than ' ...
                    '12 if working in single.']);
@@ -130,8 +145,6 @@ end
 if nargout == 2, options = fpopts; end
 if nargin == 0 || isempty(x), if nargout >= 1, c = []; end, return, end
 
-if fpopts.flip == 1, fpopts.t = t; end
-    
 emin = 1-emax;            % Exponent of smallest normalized number.
 xmin = 2^emin;            % Smallest positive normalized number.
 emins = emin + 1 - t;     % Exponent of smallest positive subnormal number.
@@ -144,8 +157,11 @@ xmax = 2^emax * (2-2^(1-t));
 c = x;
 e = floor(log2(abs(x)));
 ktemp = (e < emin & e >= emins);
-k_sub = find(ktemp);
-k_norm = find(~ktemp);
+if fpopts.explim
+   k_sub = find(ktemp); k_norm = find(~ktemp);
+else 
+   k_sub = []; k_norm = 1:length(ktemp); % Do not limit exponent.
+end   
 
 c(k_norm) = pow2(roundit(pow2(x(k_norm), t-1-e(k_norm)), fpopts), ...
                  e(k_norm)-(t-1));
@@ -154,12 +170,14 @@ if ~isempty(k_sub)
    c(k_sub) = pow2(roundit( pow2(x(k_sub), t1-1-e(k_sub)), fpopts ), ...
                    e(k_sub)-(t1-1));
    if fpopts.subnormal == 0
-     c(k_sub) = 0;   % Flush subnormals to zero.
+      c(k_sub) = 0;   % Flush subnormals to zero.
    end  
 end  
 
-% Any number large than xboundary rounds to inf [1, p. 16].
-xboundary = 2^emax * (2-(1/2)*2^(1-t));
-c(find(x >= xboundary)) = inf;   % Overflow to +inf.
-c(find(x <= -xboundary)) = -inf; % Overflow to -inf.
-c(find(abs(x) < xmins)) = 0;     % Underflow to zero.
+if fpopts.explim
+   % Any number larger than xboundary rounds to inf [1, p. 16].
+   xboundary = 2^emax * (2-(1/2)*2^(1-t));
+   c(find(x >= xboundary)) = inf;   % Overflow to +inf.
+   c(find(x <= -xboundary)) = -inf; % Overflow to -inf.
+   c(find(abs(x) < xmins)) = 0;     % Underflow to zero.
+end

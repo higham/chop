@@ -57,6 +57,12 @@ The function `chop` is a successor to a function of the same name in the
 (also available on
 [File Exchange](https://uk.mathworks.com/matlabcentral/fileexchange/2360-the-matrix-computation-toolbox)).
 
+The test function `test_chop` needs the function 
+`float_params`from the repository
+[float_params](https://github.com/higham/float_params).
+That function is included in this repository for convenience, but may not
+be the latest version.
+
 Requirements
 ---------
 

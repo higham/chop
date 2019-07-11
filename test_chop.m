@@ -141,7 +141,10 @@ B = A + A.*rand(size(A))*1e-14;  % Keep 0 as 0.
 C = chop(B,options);
 assert_eq(A,C);
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Main loop: test single and half formats.
 for i = 1:2
+clear chop fp options 
 
 if i == 1
    % Single precision tests.
@@ -198,7 +201,7 @@ for rmode = 1:6
     options.round = rmode;
     x = y + (dy*10^(-3));
     c = chop(x,options);
-    if (options.round == 2)
+    if options.round == 2
         assert_eq(c,y+dy) % Rounding up.
     elseif options.round >= 5
         % Check rounded either up or down.
@@ -218,7 +221,6 @@ assert_eq(c,x)
 
 % IEEE 2008, page 16: rule for rounding to infinity.
 x = 2^emax * (2-(1/2)*2^(1-p));  % Round to inf.
-xboundary = 2^emax * (2-(1/2)*2^(1-p)); % YYY This line is redundant right?
 c = chop(x,options);
 assert_eq(c,inf)
 x = 2^emax * (2-(3/4)*2^(1-p));  % Round to realmax.
@@ -233,7 +235,6 @@ if i == 2
 end
 
 % Underflow tests.
-
 if i == 1
     delta = double(eps(single(1)));
 else
@@ -275,7 +276,18 @@ x = xmins/2; c = chop(x,options); assert_eq(c,0)
 options.subnormal = 1;
 x = xmins/2; c = chop(x,options); assert_eq(c,0)
 
+% Do not limit exponent.
+options.explim = 0;
+x = xmin/2;  c = chop(x,options); assert_eq(c,x)
+x = -xmin/2;  c = chop(x,options); assert_eq(c,x)
+x = xmax*2;  c = chop(x,options); assert_eq(c,x)
+x = -xmax*2;  c = chop(x,options); assert_eq(c,x)
+x = xmins/2; c = chop(x,options); assert_eq(c,x)
+x = -xmins/2; c = chop(x,options); assert_eq(c,x)
+
 end % for i
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+clear options
 
 % Test rounding with CHOP versus native rounding.
 options.format = 's'; 
@@ -351,14 +363,19 @@ temp = 0;
 try
     options.format = 'c';
     options.params = [12 5];
-    temp = chop(single(pi),options); % Error!
+    temp = chop(single(pi),options); % Error - double rounding!
 catch
 end
 assert_eq(temp,0)
 try
     options.format = 'c';
     options.params = [26 9];
-    temp = chop(pi,options); % Error!
+    temp = chop(pi,options); % Error - double rounding!
+catch
+end
+assert_eq(temp,0)
+try
+    temp = chop(complex(1,1)); % Error - complex data!
 catch
 end
 assert_eq(temp,0)
