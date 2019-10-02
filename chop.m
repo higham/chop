@@ -42,7 +42,7 @@ function [c,options] = chop(x,options)
 %      underflow, or subnormal numbers will be produced only if necessary 
 %      for the data type of X.  This option is useful for exploring
 %      low precisions indepdent of range limitations.
-
+%
 %   On the first call: if options is omitted or only partially specified 
 %   the defaults stated above are used.
 %   On subsequent calls: if options is omitted or empty then the values
