@@ -61,11 +61,13 @@ function [c,options] = chop(x,options)
 
 if nargin >= 1 && ~isreal(x), error('Chop requires a real input array.'), end
 persistent fpopts
+reset_format_settings = 0;
 
 if isempty(fpopts) && (nargin <= 1 || (nargin == 2 && isempty(options)))
       fpopts.format = 'h'; fpopts.subnormal = 1;
       fpopts.round = 1; fpopts.flip = 0; fpopts.p = 0.5;
       fpopts.explim = 1;
+      reset_format_settings = 1;
 elseif nargin == 2 && ~isempty(options)
     % This is not the first call, but fpopts might have all empty fields.
     if ~isfield(options,'format') || ...
@@ -101,50 +103,56 @@ elseif nargin == 2 && ~isempty(options)
        fpopts.explim = options.explim;
     else
        fpopts.explim = 1;
-    end    
+    end
+    reset_format_settings = 1;
 end
 
-if ismember(fpopts.format, {'h','half','fp16','b','bfloat16','s', ...
-                            'single','fp32','d','double','fp64'})
-   if ismember(fpopts.format, {'h','half','fp16'})
-       % Significand: 10 bits plus 1 hidden. Exponent: 5 bits.
-       t = 11; emax = 15;
-   elseif ismember(fpopts.format, {'b','bfloat16'})
-       % Significand: 7 bits plus 1 hidden. Exponent: 8 bits.
-       t = 8; emax = 127;  
-   elseif ismember(fpopts.format, {'s','single','fp32'})
-       % Significand: 23 bits plus 1 hidden. Exponent: 8 bits.
-       t = 24; emax = 127;
-   elseif ismember(fpopts.format, {'d','double','fp64'})
-       % Significand: 52 bits plus 1 hidden. Exponent: 11 bits.
-       t = 53; emax = 1023;
-   end
-   fpopts.params = [t emax];
-elseif ismember(fpopts.format, {'c','custom'})
-   if nargin == 2 && ~isempty(options)
-      if isfield(options,'params') && ~isempty(options.params)
-         fpopts.params(1) = options.params(1);
-         fpopts.params(2) = options.params(2);
-         % Need "p_2 \ge 2p_1 + 2" to avoid double rounding problems.
-         if isa(x,'single') && (fpopts.params(1) > 11)
-            error(['Precision of the custom format must be less than ' ...
-                   '12 if working in single.']);
-         elseif isa(x,'double') && (fpopts.params(1) > 25)
-            error(['Precision of the custom format must be less than ' ...
-                   '26 if working in double.']);
-         end
-      end    
-   elseif ~isfield(fpopts,'params') || isempty(fpopts.params)
-      error('Must specify options.params with options.format = ''c''.')
-   end    
-   t = fpopts.params(1); emax = fpopts.params(2);
-else
-   error('Unrecognized format.')  
-end   
+persistent t
+persistent emax
+
+if reset_format_settings
+    if ismember(fpopts.format, {'h','half','fp16','b','bfloat16','s', ...
+                                'single','fp32','d','double','fp64'})
+       if ismember(fpopts.format, {'h','half','fp16'})
+           % Significand: 10 bits plus 1 hidden. Exponent: 5 bits.
+           t = 11; emax = 15;
+       elseif ismember(fpopts.format, {'b','bfloat16'})
+           % Significand: 7 bits plus 1 hidden. Exponent: 8 bits.
+           t = 8; emax = 127;  
+       elseif ismember(fpopts.format, {'s','single','fp32'})
+           % Significand: 23 bits plus 1 hidden. Exponent: 8 bits.
+           t = 24; emax = 127;
+       elseif ismember(fpopts.format, {'d','double','fp64'})
+           % Significand: 52 bits plus 1 hidden. Exponent: 11 bits.
+           t = 53; emax = 1023;
+       end
+       fpopts.params = [t emax];
+    elseif ismember(fpopts.format, {'c','custom'})
+       if nargin == 2 && ~isempty(options)
+          if isfield(options,'params') && ~isempty(options.params)
+             fpopts.params(1) = options.params(1);
+             fpopts.params(2) = options.params(2);
+             % Need "p_2 \ge 2p_1 + 2" to avoid double rounding problems.
+             if isa(x,'single') && (fpopts.params(1) > 11)
+                error(['Precision of the custom format must be less than ' ...
+                       '12 if working in single.']);
+             elseif isa(x,'double') && (fpopts.params(1) > 25)
+                error(['Precision of the custom format must be less than ' ...
+                       '26 if working in double.']);
+             end
+          end
+       elseif ~isfield(fpopts,'params') || isempty(fpopts.params)
+          error('Must specify options.params with options.format = ''c''.')
+       end
+       t = fpopts.params(1); emax = fpopts.params(2);
+    else
+       error('Unrecognized format.')  
+    end
+end
 
 if nargout == 2, options = fpopts; end
 if nargin == 0 || isempty(x), if nargout >= 1, c = []; end, return, end
-
+ 
 emin = 1-emax;            % Exponent of smallest normalized number.
 xmin = 2^emin;            % Smallest positive normalized number.
 emins = emin + 1 - t;     % Exponent of smallest positive subnormal number.
@@ -171,8 +179,8 @@ if ~isempty(k_sub)
                    e(k_sub)-(t1-1));
    if fpopts.subnormal == 0
       c(k_sub) = 0;   % Flush subnormals to zero.
-   end  
-end  
+   end
+end
 
 if fpopts.explim
    % Any number larger than xboundary rounds to inf [1, p. 16].
