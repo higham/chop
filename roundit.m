@@ -1,6 +1,6 @@
 function [y,options] = roundit(x,options)
 %ROUNDIT   Round a matrix to integer entries, with various options.
-%   y = ROUNDIT(X,p,options) rounds the matrix X to have integer
+%   y = ROUNDIT(X,options) rounds the matrix X to have integer
 %   entries, as specified by options.round:
 %     1: round to nearest integer using round to even to break ties
 %        (the default),
@@ -48,7 +48,7 @@ switch options.round
 
   case 4
     % Round towards zero.
-    if x >= 0, y = floor(x); else y = ceil(x); end
+    y = (x >= 0) .* floor(x) + (x < 0) .* ceil(x);
 
   case {5, 6}
 

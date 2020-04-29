@@ -45,7 +45,7 @@ assert_eq(y,[0 -2 -2; -2 -3 -1])
 options.round = 4;
 A = [0 -1.1 -1.5; -2.9 -2 -0.5; 0.5 1.5 3];
 y = roundit(A,options);
-assert_eq(y,[0 -1 -1; -2 -2 0; 1 2 3])
+assert_eq(y,[0 -1 -1; -2 -2 0; 0 1 3])
 
 options.round = 5;
 tol = 1e-6;
