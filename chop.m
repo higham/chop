@@ -168,7 +168,7 @@ ktemp = (e < emin & e >= emins);
 if fpopts.explim
    k_sub = find(ktemp); k_norm = find(~ktemp);
 else 
-   k_sub = []; k_norm = 1:length(ktemp); % Do not limit exponent.
+  k_sub = []; k_norm = 1:length(ktemp(:)); % Do not limit exponent.
 end   
 
 c(k_norm) = pow2(roundit(pow2(x(k_norm), t-1-e(k_norm)), fpopts), ...
