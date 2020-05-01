@@ -71,14 +71,14 @@ be the latest version.
 Usage
 -----
 
-There are two main usages of \chop.
+There are two main usages of `chop`.
 First, one can pass `options` with every call:
 
 ```
 options.precision = 's'; options.round = 5; options.subnormal = 1; 
 ...
 A(i,j) = chop(A(i,j) - chop(A(i,k) * A(k,j),options),options);
-'''
+```
 
 Here, `options.precision = 's'` specifies that the precision is single,
 `options.round = 5` specifies stochastic rounding, mode 1
@@ -96,15 +96,15 @@ options.precision = 's'; options.round = 5; options.subnormal = 1;
 chop([],options)
 ...
 A(i,j) = chop(A(i,j) - chop(A(i,k)*A(k,j))); 
-'''
+```
 
 The current value of `options` is stored inside the function
 (in a persistent variable, whose value is retained during the session until
-the function is cleared with `clear chop"` and can be obtained with 
+the function is cleared with `clear chop` and can be obtained with 
 
 ```
 [~,options] = chop
-'''
+```
 
 Requirements
 ---------
@@ -116,8 +116,8 @@ Reference
 ---------
 
 Nicholas J. Higham and Srikara Pranesh, [Simulating Low Precision
-Floating-Point Arithmetic](http://eprints.maths.manchester.ac.uk/2723), MIMS Eprint 2019.4, Manchester Institute for Mathematical
-Sciences, The University of Manchester, UK, March 2019; revised July 2019.
+Floating-Point Arithmetic](https://epubs.siam.org/doi/10.1137/19M1251308), 
+SIAM J. Sci. Comput., 41(4):A2536--A2551, 2019.
 
 License
 -------
