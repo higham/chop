@@ -109,8 +109,8 @@ the function is cleared with `clear chop` and can be obtained with
 Requirements
 ---------
 
-The code was developed in MATLAB R2018b and works with versions at least
-back to R2016a.
+The code was developed in versions of MATLAB up to R2020a and works with
+versions at least back to R2016a.
 
 Reference
 ---------
