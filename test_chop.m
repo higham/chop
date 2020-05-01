@@ -285,9 +285,9 @@ x = -xmax*2;  c = chop(x,options); assert_eq(c,x)
 x = xmins/2; c = chop(x,options); assert_eq(c,x)
 x = -xmins/2; c = chop(x,options); assert_eq(c,x)
 A = [pi -pi; pi -pi];
-c = chop(A, options);
+C = chop(A,options);
 options.explim = 1;
-assert_eq(c,chop(A,options));
+assert_eq(C,chop(A,options));
 
 end % for i
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

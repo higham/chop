@@ -16,7 +16,8 @@ function [c,options] = chop(x,options)
 %      number of bits in the significand (including the hidden bit) and
 %      emax is the maximum value of the exponent.  The values of t and emax
 %      are built-in for b, h, s, d and will automatically be returned in
-%      options.params. 
+%      options.params.  options.format = 'd' is intended to be used only with 
+%      options.subnormal = 0.
 %   2. options.subnormal specifies whether subnormal numbers are supported
 %      (if they are not, subnormals are flushed to zero):
 %        0 = do not support subnormals (the default for bfloat16),
@@ -52,9 +53,9 @@ function [c,options] = chop(x,options)
 %   and can be obtained with [~,options] = CHOP.
 
 % References:
-% [1] IEEE Standard for Floating-Point Arithmetic, IEEE Std 754-2008 (revision 
-% of IEEE Std 754-1985), 58, IEEE Computer Society, 2008; pages 8,
-% 13. https://ieeexplore.ieee.org/document/461093
+% [1] IEEE Standard for Floating-Point Arithmetic, IEEE Std 754-2019
+% (revision of IEEE Std 754-2008), IEEE Computer Society, 2019.
+% https://ieeexplore.ieee.org/document/8766229/
 % [2] Intel Corporation, BFLOAT16---hardware numerics definition,  Nov. 2018, 
 % White paper. Document number 338302-001US.
 % https://software.intel.com/en-us/download/bfloat16-hardware-numerics-definition

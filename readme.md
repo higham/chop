@@ -68,6 +68,44 @@ The test function `test_chop` needs the function
 That function is included in this repository for convenience, but may not
 be the latest version.
 
+Usage
+-----
+
+There are two main usages of \chop.
+First, one can pass `options` with every call:
+
+```
+options.precision = 's'; options.round = 5; options.subnormal = 1; 
+...
+A(i,j) = chop(A(i,j) - chop(A(i,k) * A(k,j),options),options);
+'''
+
+Here, `options.precision = 's'` specifies that the precision is single,
+`options.round = 5` specifies stochastic rounding, mode 1
+and `options.subnormal = 1` specifies that subnormal numbers are
+not flushed to zero. 
+For full details of the options see the help lines in `chop.m`.
+
+The above usage is rather tedious and produces cluttered code.
+Instead we can set up the arithmetic parameters on a call of the form 
+`chop([],options)` and exploit the fact that subsequent calls 
+with just one input argument will reuse the previously specified `options`:
+
+```
+options.precision = 's'; options.round = 5; options.subnormal = 1; 
+chop([],options)
+...
+A(i,j) = chop(A(i,j) - chop(A(i,k)*A(k,j))); 
+'''
+
+The current value of `options` is stored inside the function
+(in a persistent variable, whose value is retained during the session until
+the function is cleared with `clear chop"` and can be obtained with 
+
+```
+[~,options] = chop
+'''
+
 Requirements
 ---------
 
