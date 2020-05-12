@@ -212,22 +212,64 @@ for rmode = 1:6
         assert_eq(c,y);
     end
 end
-options.round = 1; % reset the rounding mode to default
 
 % Overflow tests.
-x = xmax;
-c = chop(x,options);
-assert_eq(c,x)
+for j = 1:6
+  options.round = j;
+  x = xmax;
+  c = chop(x,options);
+  assert_eq(c,x)
+end
 
-% IEEE 2008, page 16: rule for rounding to infinity.
+% Infinities tests.
+for j = 1:6
+  options.round = j;
+  x = inf;
+  c = chop(x,options);
+  assert_eq(c,x)
+  c = chop(-x,options);
+  assert_eq(c,-x)
+end
+
+% IEEE 754-2019, page 27: rule for rounding to infinity.
+% Round to nearest
+options.round = 1; % reset the rounding mode to default
 x = 2^emax * (2-(1/2)*2^(1-p));  % Round to inf.
 c = chop(x,options);
 assert_eq(c,inf)
+c = chop(-x,options);
+assert_eq(c,-inf)
+
 x = 2^emax * (2-(3/4)*2^(1-p));  % Round to realmax.
 c = chop(x,options);
 assert_eq(c,xmax)
+c = chop(-x,options);
+assert_eq(c,-xmax)
+
+% Round towards plus infinity
+options.round = 2;
+x = 2^emax * (2-(1/2)*2^(1-p));
+c = chop(x,options);
+assert_eq(c,inf)
+c = chop(-x,options);
+assert_eq(c,-xmax)
+
+% Round towards minus infinity
+options.round = 3;
+c = chop(x,options);
+assert_eq(c,xmax)
+c = chop(-x,options);
+assert_eq(c,-inf)
+
+% Round towards zero
+options.round = 4;
+c = chop(x,options);
+assert_eq(c,xmax)
+c = chop(-x,options);
+assert_eq(c,-xmax)
 
 % Round to nearest.
+options.round = 1; % reset the rounding mode to default
 if i == 2
    x = 1 + 2^(-11);
    c = chop(x,options);
