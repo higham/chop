@@ -164,7 +164,8 @@ xmax = 2^emax * (2-2^(1-t));
 % x = 2^e * d_1.d_2...d_{t-1} * s, s = 1 or -1.
 
 c = x;
-e = floor(log2(abs(x)));
+[~,e] = log2(abs(x));
+e = e - 1;
 ktemp = (e < emin & e >= emins);
 if fpopts.explim
    k_sub = find(ktemp); k_norm = find(~ktemp);
