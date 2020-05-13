@@ -48,7 +48,7 @@ switch options.round
 
   case 4
     % Round towards zero.
-    y = (x >= 0) .* floor(x) + (x < 0) .* ceil(x);
+    y = (x >= 0 | x == -inf) .* floor(x) + (x < 0 | x == inf) .* ceil(x);
 
   case {5, 6}
 

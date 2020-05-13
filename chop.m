@@ -184,9 +184,21 @@ if ~isempty(k_sub)
 end
 
 if fpopts.explim
+  switch(fpopts.round)
+    case {1,6}
    % Any number larger than xboundary rounds to inf [1, p. 16].
    xboundary = 2^emax * (2-(1/2)*2^(1-t));
    c(find(x >= xboundary)) = inf;   % Overflow to +inf.
    c(find(x <= -xboundary)) = -inf; % Overflow to -inf.
+    case 2
+      c(find(x > xmax)) = inf;
+      c(find(x < -xmax & x ~= -inf)) = -xmax;
+    case 3
+      c(find(x > xmax & x ~= inf)) = xmax;
+      c(find(x < -xmax)) = -inf;
+    case {4,5}
+      c(find(x > xmax & x ~= inf)) = xmax;
+      c(find(x < -xmax & x ~= -inf)) = -xmax;
+  end
    c(find(abs(x) < xmins)) = 0;     % Underflow to zero.
 end
