@@ -16,8 +16,6 @@ function [y,options] = roundit(x,options)
 %   If options.flip = 1 (default 0) then each element of the rounded result 
 %   has, with probability options.p (default 0.5), a randomly chosen bit
 %   (in its binary representation) flipped. 
-%   The integers are assumed to have moduli on the interval [0,2^options.t-1],
-%   which defines the range of bits in their binary representation.
 
 if nargin < 2 || isempty(options) 
     options.round = 1; options.flip = 0; options.p = 0.5;
