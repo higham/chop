@@ -405,6 +405,26 @@ options.format = 'h';
 temp2 = chop(single(pi),options);
 assert_eq(temp1,temp2)
 
+% Test base 2 logarithm
+options.format = 'h';
+options.round = 4;
+x = single(2^-3 * (sum(2.^(-[0:23]))));
+assert_eq(chop(x,options), single(2^-3 * (sum(2.^(-[0:10])))))
+
+x = 2^-3 * (sum(2.^(-[0:52])));
+assert_eq(chop(x,options), 2^-3 * (sum(2.^(-[0:10]))))
+
+options.format = 's';
+x = single(2^-3 * (sum(2.^(-[0:23]))));
+assert_eq(chop(x,options), x)
+
+x = 2^-3 * (sum(2.^(-[0:52])));
+assert_eq(chop(x,options), 2^-3 * (sum(2.^(-[0:23]))))
+
+options.format = 'd';
+x = 2^-3 * (sum(2.^(-[0:52])));
+assert_eq(chop(x,options), x)
+
 temp = 0;
 try
     options.format = 'c';
