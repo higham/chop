@@ -117,7 +117,7 @@ Reference
 
 Nicholas J. Higham and Srikara Pranesh, [Simulating Low Precision
 Floating-Point Arithmetic](https://epubs.siam.org/doi/10.1137/19M1251308), 
-SIAM J. Sci. Comput., 41(4):A2536--A2551, 2019.
+SIAM J. Sci. Comput., 41(4):A2536-A2551, 2019.
 
 Acknowledgements
 ---------
