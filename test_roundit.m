@@ -105,7 +105,7 @@ assert_eq(true, abs(prop_changed - options.p) < 5e-2) % Heuristic test.
 % Make sure zero is bit-flipped correctly.
 options = rmfield(options,'p');
 options.flip = 1; nsamp = 1e4;
-j = 0; options.t = 3; options.p = 0.5;
+j = 0; options.params(1) = 3; options.p = 0.5;
 for i = 1:nsamp
     y = roundit(0,options); 
     if y ~= 0, j = j +1; end
