@@ -93,7 +93,7 @@ m = 500;
 A = 15*rand(m);
 y1 = roundit(A,options); % Now y1 is an integer matrix.
 options.flip = 1;
-options.t = 4;  % Integers with modulus on [0,15].
+options.params(1) = 4;  % Integers with modulus on [0,15].
 y2 = roundit(y1,options); % No rounding, but bits flipped.
 prop_changed = sum(sum(y1 ~= y2)) / m^2;
 assert_eq(true, abs(prop_changed - 0.5) < 5e-2) % Heuristic test.
