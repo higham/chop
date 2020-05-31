@@ -42,7 +42,7 @@ function [c,options] = chop(x,options)
 %      exponent) for the specified arithmetic is ignored, so overflow,
 %      underflow, or subnormal numbers will be produced only if necessary 
 %      for the data type of X.  This option is useful for exploring
-%      low precisions indepdent of range limitations.
+%      low precisions independent of range limitations.
 %
 %   On the first call: if options is omitted or only partially specified 
 %   the defaults stated above are used.

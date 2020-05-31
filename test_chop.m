@@ -52,6 +52,17 @@ assert_eq(options.p,0.5)
 % fp.format = []; [c,options] = chop(pi,fp);
 % assert_eq(options.format,'h')
 
+% Check flip output.
+clear chop fp 
+fp.flip = 1; fp.format = 'd'
+c = ones(8,1);
+d = chop(c,fp); assert_eq(norm(d-c,1)>0,true);
+d = chop(c',fp); assert_eq(norm(d-c',1)>0,true);
+fp.p = 0; % No bits flipped.
+d = chop(c,fp); assert_eq(d,d);
+fp.p = 1; % All bits flipped.
+d = chop(c,fp); assert_eq(all(d ~= c),true);
+
 clear chop
 [~,fp] = chop;
 assert_eq(fp.subnormal,1)

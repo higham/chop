@@ -84,7 +84,8 @@ if options.flip
       u = abs(y(k));
       % Random bit flip in significand.
       % b defines which bit (1 to p-1) to flip in each element of y.
-      b = randi(options.t-1,length(k),1);
+      % Using  SIZE avoids unwanted implicit expansion.
+      b = randi(options.params(1)-1,size(u,1),size(u,2));
       % Flip selected bits.
       u = bitxor(u,2.^(b-1));
       y(k) = mysign(y(k)).*u; 
