@@ -179,9 +179,6 @@ if ~isempty(k_sub)
    t1 = t - max(emin-e(k_sub),0);
    c(k_sub) = pow2(roundit( pow2(x(k_sub), t1-1-e(k_sub)), fpopts ), ...
                    e(k_sub)-(t1-1));
-   if fpopts.subnormal == 0
-      c(k_sub) = 0;   % Flush subnormals to zero.
-   end
 end
 
 if fpopts.explim
@@ -201,5 +198,32 @@ if fpopts.explim
       c(find(x > xmax & x ~= inf)) = xmax;
       c(find(x < -xmax & x ~= -inf)) = -xmax;
   end
-   c(find(abs(x) < xmins)) = 0;     % Underflow to zero.
+  % Round to smallest representable number or flush to zero.
+  if fpopts.subnormal == 0
+    min_rep = xmin;
+  else
+    min_rep = xmins;
+  end
+  k_small = abs(c) < min_rep;
+  switch(fpopts.round)
+    case 1
+      if fpopts.subnormal == 0
+        k_round = k_small & abs(c) >= min_rep/2;
+      else
+        k_round = k_small & abs(c) > min_rep/2;
+      end
+      c(k_round) = sign(c(k_round)) * min_rep;
+      c(k_small & ~k_round) = 0;
+    case 2
+      k_round = k_small & c > 0 & c < min_rep;
+      c(k_round) = min_rep;
+      c(k_small & ~k_round) = 0;
+    case 3
+      k_round = k_small & c < 0 & c > -min_rep;
+      c(k_round) = -min_rep;
+      c(k_small & ~k_round) = 0;
+    case {4,5,6}
+      c(k_small) = 0;
+  end
+end
 end

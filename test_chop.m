@@ -48,13 +48,13 @@ assert_eq(options.round,1)
 assert_eq(options.flip,0)
 assert_eq(options.p,0.5)
 % % Takes different path from previous test since fpopts exists.
-% fp.subnormal = 0; 
+% fp.subnormal = 0;
 % fp.format = []; [c,options] = chop(pi,fp);
 % assert_eq(options.format,'h')
 
 % Check flip output.
-clear chop fp 
-fp.flip = 1; fp.format = 'd'
+clear chop fp
+fp.flip = 1; fp.format = 'd';
 c = ones(8,1);
 d = chop(c,fp); assert_eq(norm(d-c,1)>0,true);
 d = chop(c',fp); assert_eq(norm(d-c',1)>0,true);
@@ -305,7 +305,7 @@ options.subnormal = 0;
 c = chop(xmin,options); assert_eq(c,xmin)
 x = [xmins xmin/2 xmin 0 xmax 2*xmax 1-delta/5 1+delta/4];
 c = chop(x,options);
-c_expected = [0 0 x(3:5) inf 1 1];
+c_expected = [0 xmin x(3:5) inf 1 1];
 assert_eq(c,c_expected)
 
 % Smallest normal number and spacing between the subnormal numbers.
@@ -314,9 +314,13 @@ x = y - delta; % The largest subnormal number.
 options.subnormal = 1;
 c = chop(x,options);
 assert_eq(c,x)
-% Now try flushing to zero.
+% Round up if subnormals are not supported.
 options.subnormal = 0;
 c = chop(x,options);
+assert_eq(c,xmin)
+% Flush subnormals to zero if subnormals are not supported.
+options.subnormal = 0;
+c = chop(xmins,options);
 assert_eq(c,0)
 
 options.subnormal = 1;
@@ -324,10 +328,34 @@ x = xmins*8;  % A subnormal number.
 c = chop(x,options);
 assert_eq(c,x)
 
-% Number too small too represent.
-x = xmins/2; c = chop(x,options); assert_eq(c,0)
+% Numbers smaller than smaller representable number.
+options.subnormal = 0;
+x = xmin / 2;
+c = chop(x,options);
+assert_eq(c,xmin)
+x = -xmin / 2;
+c = chop(x,options);
+assert_eq(c,-xmin)
+x = xmin / 4;
+c = chop(x,options);
+assert_eq(c,0)
+x = -xmin / 4;
+c = chop(x,options);
+assert_eq(c,0)
+
 options.subnormal = 1;
-x = xmins/2; c = chop(x,options); assert_eq(c,0)
+x = xmins / 2;
+c = chop(x,options);
+assert_eq(c,0)
+x = -xmins / 2;
+c = chop(x,options);
+assert_eq(c,0)
+x = xmins / 4;
+c = chop(x,options);
+assert_eq(c,0)
+x = -xmins / 4;
+c = chop(x,options);
+assert_eq(c,0)
 
 % Do not limit exponent.
 options.explim = 0;
@@ -342,13 +370,85 @@ C = chop(A,options);
 options.explim = 1;
 assert_eq(C,chop(A,options));
 
+% Round towards plus infinity
+options.round = 2;
+options.subnormal = 0;
+x = xmin / 2;
+c = chop(x,options);
+assert_eq(c,xmin)
+x = -xmin / 2;
+c = chop(x,options);
+assert_eq(c,0)
+
+options.subnormal = 1;
+x = xmins / 2;
+c = chop(x,options);
+assert_eq(c,xmins)
+x = -xmins / 2;
+c = chop(x,options);
+assert_eq(c,0)
+x = xmins / 4;
+c = chop(x,options);
+assert_eq(c,xmins)
+x = -xmins / 4;
+c = chop(x,options);
+assert_eq(c,0)
+
+% Round towards minus infinity
+options.round = 3;
+options.subnormal = 0;
+x = xmin / 2;
+c = chop(x,options);
+assert_eq(c,0)
+x = -xmin / 2;
+c = chop(x,options);
+assert_eq(c,-xmin)
+
+options.subnormal = 1;
+x = xmins / 2;
+c = chop(x,options);
+assert_eq(c,0)
+x = -xmins / 2;
+c = chop(x,options);
+assert_eq(c,-xmins)
+x = xmins / 4;
+c = chop(x,options);
+assert_eq(c,0)
+x = -xmins / 4;
+c = chop(x,options);
+assert_eq(c,-xmins)
+
+% Round towards zero.
+options.round = 4;
+options.subnormal = 0;
+x = xmin / 2;
+c = chop(x,options);
+assert_eq(c,0)
+x = -xmin / 2;
+c = chop(x,options);
+assert_eq(c,0)
+
+options.subnormal = 1;
+x = xmins / 2;
+c = chop(x,options);
+assert_eq(c,0)
+x = -xmins / 2;
+c = chop(x,options);
+assert_eq(c,0)
+x = xmins / 4;
+c = chop(x,options);
+assert_eq(c,0)
+x = -xmins / 4;
+c = chop(x,options);
+assert_eq(c,0)
+
 end % for i
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear options
 
 % Test rounding with CHOP versus native rounding.
-options.format = 's'; 
-m = 100;; y = zeros(3,n); z = y;
+options.format = 's';
+m = 100; y = zeros(3,n); z = y;
 for i = 1:m
 x = randn;
 options.round = 2; y(i,1) = chop(x,options);
