@@ -18,7 +18,7 @@ function [y,options] = roundit(x,options)
 %   (in its binary representation) flipped. 
 
 if nargin < 2 || isempty(options) 
-    options.round = 1; options.flip = 0; options.p = 0.5;
+   options.round = 1; options.flip = 0; options.p = 0.5;
 end    
 if ~isfield(options,'round'), options.round = 1; end
 if ~isfield(options,'flip'), options.flip = 0; end
@@ -84,7 +84,7 @@ if options.flip
       u = abs(y(k));
       % Random bit flip in significand.
       % b defines which bit (1 to p-1) to flip in each element of y.
-      % Using  SIZE avoids unwanted implicit expansion.
+      % Using SIZE avoids unwanted implicit expansion.
       b = randi(options.params(1)-1,size(u,1),size(u,2));
       % Flip selected bits.
       u = bitxor(u,2.^(b-1));
