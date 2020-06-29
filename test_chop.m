@@ -9,7 +9,7 @@ rng(1)
 n = 0;
 uh = 2^(-11);  % Unit roundoff for fp16.
 pi_h = 6432*uh; % fp16(pi)
-    
+
 % Check handling of defaults and persistent variable.
 fp.format = 'bfloat16'; [c,options] = chop(pi,fp);
 assert_eq(fp.format,options.format)
@@ -30,13 +30,19 @@ assert_eq(options.round,1)  % Check default.
 fp.flip = []; [c,options] = chop(pi,fp);
 assert_eq(options.flip,0)  % Check no default.
 
-clear chop fp options 
-fp.flip = 1; [~,options] = chop([],fp);
-assert_eq(options.format,'h') 
-assert_eq(options.round,1)  
-assert_eq(options.subnormal,1)  
+fp.explim = []; [c,options] = chop(pi,fp);
+assert_eq(options.explim,1)  % Check default.
 
-clear chop fp options 
+fp.explim = 0; [c,options] = chop(pi,fp);
+assert_eq(options.explim,0)  % Check no default.
+
+clear chop fp options
+fp.flip = 1; [~,options] = chop([],fp);
+assert_eq(options.format,'h')
+assert_eq(options.round,1)
+assert_eq(options.subnormal,1)
+
+clear chop fp options
 % check all default options
 fp.format = []; fp.subnormal = [];
 fp.round = []; fp.flip = [];
@@ -155,7 +161,7 @@ assert_eq(A,C);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Main loop: test single and half formats.
 for i = 1:2
-clear chop fp options 
+clear chop fp options
 
 if i == 1
    % Single precision tests.
@@ -173,7 +179,7 @@ if i == 1
    y = double(single(x));
 elseif i == 2
    y = pi_h; % double(fp16(x));
-end    
+end
 c = chop(x,options);
 assert_eq(c,y);
 x = -pi;
@@ -186,7 +192,7 @@ if i == 1
    dy = double(eps(single(y)));
 elseif i == 2
    dy = 2*y*uh; % double(eps(fp16(y)));
-end    
+end
 x = y + dy;
 c = chop(x,options);
 assert_eq(c,x)
@@ -202,7 +208,7 @@ if i == 1
    dy = double(eps(single(y)));
 elseif i == 2
    dy = 2*y*uh; % double(eps(fp16(y)));
-end    
+end
 x = y + dy;
 c = chop(x,options);
 assert_eq(c,x)
@@ -292,7 +298,7 @@ if i == 1
     delta = double(eps(single(1)));
 else
     delta = 2*uh; % double(eps(fp16(1)));
-end    
+end
 
 options.subnormal = 1;
 c = chop(xmin,options); assert_eq(c,xmin)
@@ -497,7 +503,7 @@ clear options
 ps = single(pi);
 pd = double(ps);
 options.format = 'b';
-ys = chop(ps);
+ys = chop(ps,options);
 assert_eq(isa(ys,'single'),true)
 yd = chop(pd);
 assert_eq(double(ys),yd)
