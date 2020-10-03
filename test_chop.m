@@ -542,6 +542,7 @@ options.format = 'd';
 x = 2^-3 * (sum(2.^(-[0:52])));
 assert_eq(chop(x,options), x)
 
+options.round = 1;
 temp = 0;
 try
     options.format = 'c';

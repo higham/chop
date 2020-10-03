@@ -133,13 +133,16 @@ if reset_format_settings
           if isfield(options,'params') && ~isempty(options.params)
              fpopts.params(1) = options.params(1);
              fpopts.params(2) = options.params(2);
-             % Need "p_2 \ge 2p_1 + 2" to avoid double rounding problems.
-             if isa(x,'single') && (fpopts.params(1) > 11)
-                error(['Precision of the custom format must be less than ' ...
-                       '12 if working in single.']);
-             elseif isa(x,'double') && (fpopts.params(1) > 25)
-                error(['Precision of the custom format must be less than ' ...
-                       '26 if working in double.']);
+             % Need "p_2 \ge 2p_1 + 2" to avoid double rounding problems
+             % in round-to-nearest.
+             if fpopts.round == 1
+                maxfraction = isa(x,'single') * 11 + isa(x,'double') * 25;
+             else
+                maxfraction = isa(x,'single') * 23 + isa(x,'double') * 52;
+             end
+             if (fpopts.params(1) > maxfraction)
+                error(['Precision of the custom format must be at most ' ...
+                       '%d if working in %s.'], maxfraction, class(x));
              end
           end
        elseif ~isfield(fpopts,'params') || isempty(fpopts.params)
