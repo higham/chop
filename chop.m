@@ -49,6 +49,7 @@ function [c,options] = chop(x,options)
 %   On subsequent calls: if options is omitted or empty then the values
 %   used in the previous call are re-used; for any missing fields the
 %   default is used.
+%   The chop options can also be set with CHOP([],options).
 %   The options structure is stored internally in a persistent variable
 %   and can be obtained with [~,options] = CHOP.
 
