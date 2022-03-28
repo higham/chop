@@ -15,7 +15,7 @@ function [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params(prec)
 %    'h', 'half', 'fp16'       - IEEE half precision,
 %    't', 'tf32'               - NVIDIA tf32,
 %    's', 'single', 'fp32'     - IEEE single precision,
-%    'd', double', 'fp64'      - IEEE double precision (the default),
+%    'd', 'double', 'fp64'     - IEEE double precision (the default),
 %    'q', 'quadruple', 'fp128' - IEEE quadruple precision.
 %   For all these arithmetics the floating-point numbers have the form
 %   s * 2^e * d_0.d_1d_2...d_{t-1} where s = 1 or -1, e is the exponent
