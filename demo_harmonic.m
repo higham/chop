@@ -5,7 +5,7 @@
 rng(1)
 fprintf('Format  Round mode      Sum      No. terms\n')
 fprintf('------------------------------------------\n')
-for p = 0:2
+for p = 0:4
 
 clear options
 
@@ -17,6 +17,8 @@ switch p
     options.params = [t emax];
   case 1, prec = 'bfloat16';
   case 2, prec = 'fp16';
+  case 3, prec = 'E4M3';
+  case 4, prec = 'E5M2';
 end
 
 options.format = prec;

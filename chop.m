@@ -6,6 +6,10 @@ function [c,options] = chop(x,options)
 %   and the output will have the same type.  The structure options
 %   controls various aspects of the rounding.
 %   1. The arithmetic format is specified by options.format, which is one of 
+%       'E4M3'                    - NVIDIA quarter precision (4 exponent,
+%                                   3 mantissa)
+%       'E5M2'                    - NVIDIA quarter precision (5 exponent,
+%                                   2 mantissa)
 %       'b', 'bfloat16'           - bfloat16,
 %       'h', 'half', 'fp16'       - IEEE half precision (the default),
 %       's', 'single', 'fp32'     - IEEE single precision,
@@ -114,8 +118,15 @@ persistent emax
 
 if reset_format_settings
     if ismember(fpopts.format, {'h','half','fp16','b','bfloat16','s', ...
-                                'single','fp32','d','double','fp64'})
-       if ismember(fpopts.format, {'h','half','fp16'})
+                                'single','fp32','d','double','fp64',...
+                                'E4M3', 'E5M2'})
+      if ismember(fpopts.format, {'E4M3'})
+           % Significand: 3 bits plus 1 hidden. Exponent: 4 bits.
+           t = 4; emax = 7;
+      elseif ismember(fpopts.format, {'E5M2'})
+           % Significand: 2 bits plus 1 hidden. Exponent: 5 bits.
+           t = 3; emax = 15;
+      elseif ismember(fpopts.format, {'h','half','fp16'})
            % Significand: 10 bits plus 1 hidden. Exponent: 5 bits.
            t = 11; emax = 15;
        elseif ismember(fpopts.format, {'b','bfloat16'})
