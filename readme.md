@@ -12,13 +12,17 @@ single precision or double precision and the output will have the same
 type: the lower precision numbers are stored within a higher precision type.
 
 The arithmetic formats supported are 
--  'E4M3'                    - NVIDIA quarter precision (4 exponent, 3 mantissa)
--  'E5M2'                    - NVIDIA quarter precision (5 exponent, 2 mantissa)
--  'b', 'bfloat16'           - bfloat16,
--  'h', 'half', 'fp16'       - IEEE half precision (the default),
--  's', 'single', 'fp32'     - IEEE single precision,
--  'd', 'double', 'fp64'     - IEEE double precision,
--  'c', 'custom'             - custom format.
+- 'q43', 'fp8-e4m3'         - NVIDIA quarter precision (4 exponent bits,
+                              3 significand (mantissa) bits)
+- 'q52', 'fp8-e5m2'         - NVIDIA quarter precision (5 exponent bits,
+                              2 significand bits)
+-  'E4M3'                   - NVIDIA quarter precision (4 exponent, 3 mantissa)
+-  'E5M2'                   - NVIDIA quarter precision (5 exponent, 2 mantissa)
+-  'b', 'bfloat16'          - bfloat16,
+-  'h', 'half', 'fp16'      - IEEE half precision (the default),
+-  's', 'single', 'fp32'    - IEEE single precision,
+-  'd', 'double', 'fp64'    - IEEE double precision,
+-  'c', 'custom'            - custom format.
 
 Subnormal numbers can be supported or not,
 and in the latter case they are flushed to zero.
@@ -125,6 +129,7 @@ Acknowledgements
 ---------
 The code was written by Nick Higham and Sri Pranesh.
 Max Fasi and Mantas Mikaitis have contributed improvements.
+Ian McInerney contribute the quarter precision formats.
 
 License
 -------

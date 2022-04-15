@@ -6,26 +6,29 @@ function [c,options] = chop(x,options)
 %   and the output will have the same type.  The structure options
 %   controls various aspects of the rounding.
 %   1. The arithmetic format is specified by options.format, which is one of 
-%       'E4M3'                    - NVIDIA quarter precision (4 exponent,
-%                                   3 mantissa)
-%       'E5M2'                    - NVIDIA quarter precision (5 exponent,
-%                                   2 mantissa)
-%       'b', 'bfloat16'           - bfloat16,
-%       'h', 'half', 'fp16'       - IEEE half precision (the default),
-%       's', 'single', 'fp32'     - IEEE single precision,
-%       'd', 'double', 'fp64'     - IEEE double precision,
-%       'c', 'custom'             - custom format.
-%      In the last case the (base 2) format is defined by 
-%      options.params, which is a 2-vector [t,emax] where t is the
-%      number of bits in the significand (including the hidden bit) and
-%      emax is the maximum value of the exponent.  The values of t and emax
-%      are built-in for b, h, s, d and will automatically be returned in
-%      options.params.  options.format = 'd' is intended to be used only with 
+%       'q43', 'fp8-e4m3'       - NVIDIA quarter precision (4 exponent bits,
+%                                 3 significand (mantissa) bits)
+%       'q52', 'fp8-e5m2'       - NVIDIA quarter precision (5 exponent bits,
+%                                 2 significand bits)
+%       'b', 'bfloat16'         - bfloat16,
+%       'h', 'half', 'fp16'     - IEEE half precision (the default),
+%       's', 'single', 'fp32'   - IEEE single precision,
+%       'd', 'double', 'fp64'   - IEEE double precision,
+%       'c', 'custom'           - custom format.
+%      The custom (base 2) format is defined by options.params, which is a
+%      2-vector [t,emax] where t is the number of bits in the significand
+%      (including the hidden bit) and emax is the maximum value of the
+%      exponent.  The minimu exponent is taken to be emin = 1 - emax and
+%      the IEEE floating-point number representation is assumed, so that
+%      emax and the number of  bits e in the exponent are related by
+%      emax = 2^(e-1) - 1.  The values of t and emax are built-in forthe 
+%      other formats and will automatically be returned in options.params.
+%      options.format = 'd' is intended to be used only with
 %      options.subnormal = 0.
 %   2. options.subnormal specifies whether subnormal numbers are supported
 %      (if they are not, subnormals are flushed to zero):
 %        0 = do not support subnormals (the default for bfloat16),
-%        1 = support subnormals (the default for fp16, fp32 and fp64).
+%        1 = support subnormals (the default for the other formats).
 %   3. The form of rounding is specified by options.round:
 %       1: round to nearest using round to even last bit to break ties
 %          (the default);
@@ -64,6 +67,9 @@ function [c,options] = chop(x,options)
 % [2] Intel Corporation, BFLOAT16---hardware numerics definition,  Nov. 2018, 
 % White paper. Document number 338302-001US.
 % https://software.intel.com/en-us/download/bfloat16-hardware-numerics-definition
+% [3] M. Croci, M. Fasi, N. J. Higham, T. Mary, and M. Mikaitis.
+% Stochastic rounding: Implementation, error analysis and applications.
+% Roy. Soc. Open Sci., 9(3):1--25, 2022.
 
 if nargin >= 1 && ~isreal(x), error('Chop requires a real input array.'), end
 persistent fpopts
@@ -119,11 +125,11 @@ persistent emax
 if reset_format_settings
     if ismember(fpopts.format, {'h','half','fp16','b','bfloat16','s', ...
                                 'single','fp32','d','double','fp64',...
-                                'E4M3', 'E5M2'})
-      if ismember(fpopts.format, {'E4M3'})
+                                'q43','fp8-e4m3','q52','fp8-e5m2'})
+      if ismember(fpopts.format, {'q43','fp8-e4m3'})
            % Significand: 3 bits plus 1 hidden. Exponent: 4 bits.
            t = 4; emax = 7;
-      elseif ismember(fpopts.format, {'E5M2'})
+      elseif ismember(fpopts.format, {'q52','fp8-e5m2'})
            % Significand: 2 bits plus 1 hidden. Exponent: 5 bits.
            t = 3; emax = 15;
       elseif ismember(fpopts.format, {'h','half','fp16'})

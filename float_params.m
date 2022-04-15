@@ -11,10 +11,10 @@ function [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params(prec)
 %     emin:  exponent of xmin,
 %     emax:  exponent of xmax.
 %   where prec is one of 
-%    'E4M3'                    - NVIDIA quarter precision (4 exponent,
-%                                3 mantissa)
-%    'E5M2'                    - NVIDIA quarter precision (5 exponent,
-%                                2 mantissa)
+%    'q43', 'fp8-e4m3'       - NVIDIA quarter precision (4 exponent bits,
+%                              3 significand bits)
+%    'q52', 'fp8-e5m2'       - NVIDIA quarter precision (5 exponent bits,
+%                              2 significand bits)
 %    'b', 'bfloat16'           - bfloat16,
 %    'h', 'half', 'fp16'       - IEEE half precision,
 %    't', 'tf32'               - NVIDIA tf32,
@@ -60,10 +60,10 @@ end
 
 if nargin < 1, prec = 'd'; end
 
-if ismember(prec, {'E4M3'})
+if ismember(prec, {'q43','fp8-e4m3'})
     % Significand: 3 bits plus 1 hidden. Exponent: 4 bits.
     p = 4; emax = 7;
-elseif ismember(prec, {'E5M2'})
+elseif ismember(prec, {'q52','fp8-e5m2'})
     % Significand: 2 bits plus 1 hidden. Exponent: 5 bits.
     p = 3; emax = 15;
 elseif ismember(prec, {'b','bfloat16'})

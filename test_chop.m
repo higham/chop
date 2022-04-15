@@ -159,7 +159,7 @@ C = chop(B,options);
 assert_eq(A,C);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Main loop: test single and half formats.
+% Main loop: test single, half and quarter formats.
 for i = 1:4
 clear chop fp options
 
@@ -173,12 +173,12 @@ elseif i == 2
    options.format = 'h';
 elseif i == 3
    % Half precision tests.
-   [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params('E4M3');
-   options.format = 'E4M3';
+   [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params('fp8-e4m3');
+   options.format = 'fp8-e4m3';
 elseif i == 4
    % Half precision tests.
-   [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params('E5M2');
-   options.format = 'E5M2';
+   [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params('fp8-e5m2');
+   options.format = 'fp8-e5m2';
 end
 options.subnormal = 0;
 

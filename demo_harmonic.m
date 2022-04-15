@@ -12,19 +12,21 @@ clear options
 switch p
   case 0
     prec = 'custom'; 
-    % "fp8": significand 4 bits plus 1 hidden, exponent 3 bits.
+    % "fp8" suggested by Cleve Moler: significand 4 bits plus 1 hidden,
+    %  exponent 3 bits.
+    % https://blogs.mathworks.com/cleve/2017/05/08/half-precision-16-bit-floating-point-arithmetic/
     t = 5; emax = 3;
     options.params = [t emax];
   case 1, prec = 'bfloat16';
   case 2, prec = 'fp16';
-  case 3, prec = 'E4M3';
-  case 4, prec = 'E5M2';
+  case 3, prec = 'fp8-e4m3';
+  case 4, prec = 'fp8-e5m2';
 end
 
 options.format = prec;
 
 for i = 1:6
-
+l
     options.round = i;
     % Initialize: subsequent calls chop(x) reuse options.
     chop([],options)
