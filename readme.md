@@ -16,8 +16,6 @@ The arithmetic formats supported are
                               3 significand (mantissa) bits)
 - 'q52', 'fp8-e5m2'         - NVIDIA quarter precision (5 exponent bits,
                               2 significand bits)
--  'E4M3'                   - NVIDIA quarter precision (4 exponent, 3 mantissa)
--  'E5M2'                   - NVIDIA quarter precision (5 exponent, 2 mantissa)
 -  'b', 'bfloat16'          - bfloat16,
 -  'h', 'half', 'fp16'      - IEEE half precision (the default),
 -  's', 'single', 'fp32'    - IEEE single precision,
@@ -125,11 +123,20 @@ Nicholas J. Higham and Srikara Pranesh, [Simulating Low Precision
 Floating-Point Arithmetic](https://epubs.siam.org/doi/10.1137/19M1251308), 
 SIAM J. Sci. Comput., 41(4):A2536-A2551, 2019.
 
+
+Related 
+---------
+
+A C library [CPFloat](https://github.com/mfasi/cpfloat)
+provides similar functionality to `chop`.
+It includes a MEX interface, and the MEX code can be faster than `chop`.
+
 Acknowledgements
 ---------
+
 The code was written by Nick Higham and Sri Pranesh.
 Max Fasi and Mantas Mikaitis have contributed improvements.
-Ian McInerney contribute the quarter precision formats.
+Ian McInerney contributed the quarter precision formats.
 
 License
 -------
