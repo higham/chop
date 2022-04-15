@@ -26,7 +26,7 @@ end
 options.format = prec;
 
 for i = 1:6
-l
+
     options.round = i;
     % Initialize: subsequent calls chop(x) reuse options.
     chop([],options)

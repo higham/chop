@@ -46,14 +46,19 @@ function [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params(prec)
 
 if nargin < 1 && nargout < 1
    precs = 'bhtsdq';
-   fprintf(['        u        xmins      xmin       xmax      p   ' ...
+   fprintf(['          u        xmins      xmin       xmax      p   ' ...
             ' emins     emin    emax\n'])
    fprintf('    ---------------------------------------------------------')
    fprintf('---------------\n')
-   for j = 1:length(precs)
-      [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params(precs(j));
+   for j = -1:length(precs)
+      switch j
+        case -1, prec = 'q43';
+        case 0,  prec = 'q52';
+        otherwise,  prec = precs(j);
+      end
+      [u,xmins,xmin,xmax,p,emins,emin,emax] = float_params(prec);
       fprintf('%s: %9.2e  %9.2e  %9.2e  %9.2e  %3.0f  %7.0f  %7.0f  %6.0f\n',...
-               precs(j),u,xmins,xmin,xmax,p,emins,emin,emax)
+               pad(prec,3,'left'),u,xmins,xmin,xmax,p,emins,emin,emax)
    end
    clear u, return
 end   
