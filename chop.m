@@ -50,6 +50,12 @@ function [c,options] = chop(x,options)
 %      underflow, or subnormal numbers will be produced only if necessary 
 %      for the data type of X.  This option is useful for exploring
 %      low precisions independent of range limitations.
+%   6. If options.randfunc is supplied, then in stochastic rounding (modes
+%      5 and 6) the random numbers used for rounding will be generated
+%      using that function. It should be a function that has a single argument
+%      for the number of random numbers to generate and returns a vector of
+%      the random numbers. If this option is not specified, the default 
+%      function using MATLAB's rand() is used.
 %
 %   On the first call: if options is omitted or only partially specified 
 %   the defaults stated above are used.
@@ -79,6 +85,7 @@ if isempty(fpopts) && (nargin <= 1 || (nargin == 2 && isempty(options)))
       fpopts.format = 'h'; fpopts.subnormal = 1;
       fpopts.round = 1; fpopts.flip = 0; fpopts.p = 0.5;
       fpopts.explim = 1;
+      fpopts.randfunc = @(n) rand(n, 1);
       reset_format_settings = 1;
 elseif nargin == 2 && ~isempty(options)
     % This is not the first call, but fpopts might have all empty fields.
@@ -115,6 +122,11 @@ elseif nargin == 2 && ~isempty(options)
        fpopts.explim = options.explim;
     else
        fpopts.explim = 1;
+    end
+    if isfield(options,'randfunc') && ~isempty(options.randfunc)
+       fpopts.randfunc = options.randfunc;
+    else
+       fpopts.randfunc = @(n) rand(n, 1);
     end
     reset_format_settings = 1;
 end
