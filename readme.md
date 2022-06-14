@@ -136,7 +136,8 @@ Acknowledgements
 
 The code was written by Nick Higham and Sri Pranesh.
 Max Fasi and Mantas Mikaitis have contributed improvements.
-Ian McInerney contributed the quarter precision formats.
+Ian McInerney contributed the quarter precision formats
+and the options.randfunc code.
 
 License
 -------

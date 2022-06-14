@@ -54,8 +54,7 @@ function [c,options] = chop(x,options)
 %      5 and 6) the random numbers used for rounding will be generated
 %      using that function. It should be a function that has a single argument
 %      for the number of random numbers to generate and returns a vector of
-%      the random numbers. If this option is not specified, the default 
-%      function using MATLAB's rand() is used.
+%      the random numbers. By default, the MATLAB rand function is used.
 %
 %   On the first call: if options is omitted or only partially specified 
 %   the defaults stated above are used.
@@ -75,7 +74,7 @@ function [c,options] = chop(x,options)
 % https://software.intel.com/en-us/download/bfloat16-hardware-numerics-definition
 % [3] M. Croci, M. Fasi, N. J. Higham, T. Mary, and M. Mikaitis.
 % Stochastic rounding: Implementation, error analysis and applications.
-% Roy. Soc. Open Sci., 9(3):1--25, 2022.
+% Roy. Soc. Open Sci., 9(3):1-25, 2022.
 
 if nargin >= 1 && ~isreal(x), error('Chop requires a real input array.'), end
 persistent fpopts
