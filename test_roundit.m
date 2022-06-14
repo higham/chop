@@ -112,6 +112,16 @@ for i = 1:nsamp
 end
 assert_eq(true, abs(j / nsamp - options.p) <= 1e-2)
 
+% Test custom random number generator function
+% Force round up behavior by biasing generator
+options = rmfield(options,'p');
+options = rmfield(options,'flip');
+options.round = 6;
+options.randfunc = @(n) rand(n,1) + 0.6;
+A = [0 -1.1 -1.5; -1.9 -2.4 -0.5];
+y = roundit(A,options);
+assert_eq(y,[0 -1 -1; -1 -2 0])
+
 fprintf('All tests successful!\n')
 
 %%%%%%%%%%%%%%%%%%%%%%%

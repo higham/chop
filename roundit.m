@@ -16,6 +16,11 @@ function [y,options] = roundit(x,options)
 %   If options.flip = 1 (default 0) then each element of the rounded result 
 %   has, with probability options.p (default 0.5), a randomly chosen bit
 %   (in its binary representation) flipped. 
+%   The random number generator used for stochastic rounding can be
+%   specified by setting options.randfunc to an anonymous function that
+%   takes as an argument the number of random numbers to generate and
+%   returns a vector of the random numbers. By default, this is the MATLAB
+%   rand function.
 
 if nargin < 2 || isempty(options) 
    options.round = 1; options.flip = 0; options.p = 0.5;
@@ -23,6 +28,7 @@ end
 if ~isfield(options,'round'), options.round = 1; end
 if ~isfield(options,'flip'), options.flip = 0; end
 if ~isfield(options,'p'), options.p = 0.5; end
+if ~isfield(options,'randfunc'), options.randfunc = @(n) rand(n, 1); end
 
 mysign = @(x) sign(x) + (x==0); % mysign(0) = 1;
 
@@ -57,7 +63,7 @@ switch options.round
     if isempty(k)
        y = x; 
     else   
-      rnd = rand(length(k),1);
+      rnd = options.randfunc(length(k));
       vals = frac(k);  vals = vals(:);
 
       switch options.round
